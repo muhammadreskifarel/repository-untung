@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#126b57">
+  <title>HitungUntung - Aplikasi Hitung Keuntungan</title>
+  <link rel="stylesheet" href="aplikasi.css">
+  <link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="#beranda">
+      <span class="brand-mark">H</span>
+      <span>Hitung<span class="brand-light">Untung</span></span>
+    </a>
+    <span class="topbar-note">
+      <span class="status-dot"></span>
+      MVP - Data tersimpan di perangkat ini
+    </span>
+  </header>
+
+  <main class="container" id="beranda">
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">PENDAMPING USAHA KECIL</p>
+        <h1>
+          Jangan cuma ramai penjualan.<br>
+          <span>Kenali juga untungnya.</span>
+        </h1>
+        <p class="hero-copy">
+          Hitung biaya produk, tentukan harga jual,
+          dan catat penjualan dalam satu tempat.
+        </p>
+      </div>
+
+      <div class="hero-illustration">
+        <div class="illustration-card card-back">
+          <span>BIAYA PRODUK</span>
+          <b>Rp12.000</b>
+          <i></i><i></i><i></i>
+        </div>
+
+        <div class="illustration-card card-front">
+          <span>ESTIMASI LABA</span>
+          <b>+ Rp6.000</b>
+          <div class="mini-bars">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <article class="metric-card">
+        <div class="metric-icon green">↗</div>
+        <p>Total omzet tercatat</p>
+        <strong id="metric-revenue">Rp0</strong>
+        <small>Dari penjualan yang dicatat</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-icon yellow">◎</div>
+        <p>Estimasi laba kotor</p>
+        <strong id="metric-profit">Rp0</strong>
+        <small>Belum termasuk biaya lain</small>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-icon purple">▤</div>
+        <p>Produk tersimpan</p>
+        <strong id="metric-products">0</strong>
+        <small>Produk yang sudah dihitung</small>
+      </article>
+    </section>
+
+    <section class="workspace">
+
+      <div class="panel calculator-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">LANGKAH 1</p>
+            <h2>Hitung biaya produk</h2>
+            <p class="muted">Masukkan biaya untuk satu kali produksi.</p>
+          </div>
+          <span class="heading-icon">＋</span>
+        </div>
+
+        <form id="product-form">
+
+          <label class="field-label" for="product-name">
+            Nama produk
+          </label>
+          <input
+            id="product-name"
+            type="text"
+            maxlength="70"
+            placeholder="Contoh: Nasi ayam"
+            required
+          >
+
+          <div class="two-fields">
+            <div>
+              <label class="field-label" for="yield-qty">
+                Hasil produksi
+              </label>
+              <div class="input-with-suffix">
+                <input
+                  id="yield-qty"
+                  type="number"
+                  min="1"
+                  value="20"
+                  required
+                >
+                <span>unit</span>
+              </div>
+            </div>
+
+            <div>
+              <label class="field-label" for="target-margin">
+                Target margin
+              </label>
+              <div class="input-with-suffix">
+                <input
+                  id="target-margin"
+                  type="number"
+                  min="0"
+                  max="80"
+                  value="30"
+                  required
+                >
+                <span>%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cost-header">
+            <div>
+              <label class="field-label">Rincian biaya</label>
+              <p class="helper">Biaya untuk satu batch produksi.</p>
+            </div>
+            <button class="text-button" id="add-cost" type="button">
+              + Tambah biaya
+            </button>
+          </div>
+
+          <div id="cost-rows" class="cost-rows"></div>
+
+          <div class="cost-total">
+            <span>Total biaya per batch</span>
+            <strong id="total-cost">Rp0</strong>
+          </div>
+
+          <button class="button button-primary full-button" type="submit">
+            Simpan perhitungan produk →
+          </button>
+
+          <p id="form-message" class="form-message" role="status"></p>
+        </form>
+      </div>
+
+      <aside class="panel result-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">HASIL PERHITUNGAN</p>
+            <h2>Gambaran biaya</h2>
+          </div>
+          <span class="heading-icon">✓</span>
+        </div>
+
+        <p class="muted result-intro">
+          Perhitungan berdasarkan angka yang kamu masukkan.
+        </p>
+
+        <div class="result-main">
+          <span>Biaya per produk</span>
+          <strong id="unit-cost">Rp0</strong>
+          <small>Total biaya dibagi hasil produksi</small>
+        </div>
+
+        <div class="result-secondary">
+          <div>
+            <span>Target margin</span>
+            <strong id="result-margin">30%</strong>
+          </div>
+          <div>
+            <span>Harga jual saran</span>
+            <strong id="suggested-price">Rp0</strong>
+          </div>
+          <div>
+            <span>Selisih per unit</span>
+            <strong id="unit-profit">Rp0</strong>
+          </div>
+        </div>
+
+        <div class="formula-note">
+          <span>ⓘ</span>
+          <p>
+            Selisih harga jual dan biaya belum tentu merupakan laba bersih
+            jika masih ada biaya yang belum dimasukkan.
+          </p>
+        </div>
+
+        <div class="example-tip">
+          <strong>Tips kecil</strong>
+          <p>
+            Masukkan biaya bahan sesuai jumlah yang benar-benar digunakan.
+          </p>
+        </div>
+      </aside>
+
+    </section>
+
+    <section class="panel products-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">KATALOG BIAYA</p>
+          <h2>Produk tersimpan</h2>
+          <p class="muted">
+            Produk yang dapat digunakan kembali untuk mencatat penjualan.
+          </p>
+        </div>
+        <span class="count-pill" id="product-count-pill">0 produk</span>
+      </div>
+
+      <div id="products-list" class="products-list">
+        <div class="empty-state">
+          <span>▧</span>
+          <strong>Belum ada produk</strong>
+          <p>Simpan produk pertama melalui formulir di atas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel sales-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">LANGKAH 2</p>
+          <h2>Catat penjualan</h2>
+          <p class="muted">
+            Pilih produk, jumlah terjual, dan harga aktual.
+          </p>
+        </div>
+        <span class="heading-icon">↗</span>
+      </div>
+
+      <form id="sale-form" class="sale-form">
+
+        <div class="sale-field sale-product-field">
+          <label class="field-label" for="sale-product">Produk</label>
+          <select id="sale-product" required>
+            <option value="">Simpan produk terlebih dahulu</option>
+          </select>
+        </div>
+
+        <div class="sale-field">
+          <label class="field-label" for="sale-quantity">
+            Jumlah terjual
+          </label>
+          <input
+            id="sale-quantity"
+            type="number"
+            min="1"
+            value="1"
+            required
+          >
+        </div>
+
+        <div class="sale-field">
+          <label class="field-label" for="sale-price">
+            Harga jual per unit (Rp)
+          </label>
+          <input
+            id="sale-price"
+            type="number"
+            min="0"
+            placeholder="18000"
+            required
+          >
+        </div>
+
+        <button class="button button-dark sale-submit" type="submit">
+          Catat penjualan
+        </button>
+
+      </form>
+
+      <p class="helper sales-helper">
+        Laba kotor merupakan estimasi berdasarkan biaya produk yang tercatat.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Produk</th>
+              <th>Jumlah</th>
+              <th>Omzet</th>
+              <th>Estimasi laba kotor</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="sales-table-body">
+            <tr>
+              <td colspan="6" class="table-empty">
+                Belum ada penjualan.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="notice">
+      <span>ⓘ</span>
+      <p>
+        <strong>Catatan:</strong> Ini masih prototipe. Data tersimpan
+        di browser perangkat ini, bukan di akun online.
+        Ketepatan hasil bergantung pada kelengkapan biaya yang dimasukkan.
+      </p>
+    </section>
+
+    <footer>
+      <a class="brand footer-brand" href="#beranda">
+        <span class="brand-mark">H</span>
+        <span>Hitung<span class="brand-light">Untung</span></span>
+      </a>
+      <span>Dibuat untuk membantu usaha kecil mengambil keputusan.</span>
+    </footer>
+
+  </main>
+
+  <script src="aplikasi.js"></script>
+  <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./sw.js")
+        .catch((error) => {
+          console.error("Service worker gagal:", error);
+        });
+    });
+  }
+</script>
+</body>
+</html>
